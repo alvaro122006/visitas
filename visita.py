@@ -20,12 +20,19 @@ async def main():
             page = await ctx.new_page()
             try:
                 await page.goto(URL, wait_until="domcontentloaded", timeout=40000)
+                await page.wait_for_timeout(3000)
+                for _ in range(3):
+                    await page.mouse.click(200, 400)
+                    await page.wait_for_timeout(600)
+                await page.wait_for_timeout(1500)
+                try:
+                    await page.get_by_text("VALE", exact=True).first.click(timeout=6000)
+                except Exception:
+                    pass
                 await page.wait_for_timeout(4000)
-                await page.mouse.wheel(0, 400)
+                await page.mouse.wheel(0, 500)
+                await page.wait_for_timeout(2000)
             except Exception as e:
                 print("fallo", e)
-            await ctx.close()
-            await asyncio.sleep(random.uniform(15, 25))
-        await b.close()
 
 asyncio.run(main())
